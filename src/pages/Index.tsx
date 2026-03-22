@@ -1,16 +1,335 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import PublicLayout from "@/components/PublicLayout";
+import RevealSection from "@/components/RevealSection";
+import { useProfile, useHeroSection, useSocialLinks, useProjects, useSkills, useExperiences, useTestimonials, usePageSections } from "@/hooks/usePortfolioData";
+import { Link } from "react-router-dom";
+import { ArrowRight, ExternalLink, Github, Linkedin, Twitter, Mail, MapPin, Briefcase, Code2, Star } from "lucide-react";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
-  return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
-    </div>
-  );
+const socialIconMap: Record<string, React.ReactNode> = {
+  github: <Github size={18} />,
+  linkedin: <Linkedin size={18} />,
+  twitter: <Twitter size={18} />,
+  email: <Mail size={18} />,
 };
 
-const Index = PlaceholderIndex;
+export default function HomePage() {
+  const { data: profile } = useProfile();
+  const { data: hero } = useHeroSection();
+  const { data: socialLinks } = useSocialLinks();
+  const { data: projects } = useProjects(true);
+  const { data: skills } = useSkills();
+  const { data: experiences } = useExperiences();
+  const { data: testimonials } = useTestimonials(true);
+  const { data: sections } = usePageSections("home");
 
-export default Index;
+  const isSectionVisible = (key: string) => {
+    const s = (sections ?? []).find((sec) => sec.section_key === key);
+    return s ? s.is_visible : true;
+  };
+
+  const getSectionData = (key: string) =>
+    (sections ?? []).find((sec) => sec.section_key === key);
+
+  const skillsByCategory = (skills ?? []).reduce((acc, skill) => {
+    const cat = skill.category || "other";
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(skill);
+    return acc;
+  }, {} as Record<string, typeof skills>);
+
+  return (
+    <PublicLayout>
+      {/* Hero */}
+      {hero?.is_visible !== false && (
+        <section className="bg-hero text-hero-foreground pt-32 pb-20 md:pt-40 md:pb-28">
+          <div className="container">
+            <div className="max-w-3xl">
+              {profile?.availability_status === "available" && (
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-medium mb-6 animate-fade-up">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  {profile.availability_text || "Available for work"}
+                </div>
+              )}
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] mb-5 animate-fade-up text-balance" style={{ animationDelay: "80ms" }}>
+                {hero?.headline || profile?.full_name || "Welcome"}
+              </h1>
+              {hero?.subheadline && (
+                <p className="text-xl md:text-2xl text-hero-foreground/60 font-medium mb-3 animate-fade-up" style={{ animationDelay: "160ms" }}>
+                  {hero.subheadline}
+                </p>
+              )}
+              {(hero?.description || profile?.short_intro) && (
+                <p className="text-base md:text-lg text-hero-foreground/50 max-w-xl leading-relaxed mb-8 animate-fade-up text-pretty" style={{ animationDelay: "240ms" }}>
+                  {hero.description || profile?.short_intro}
+                </p>
+              )}
+
+              <div className="flex flex-wrap items-center gap-3 mb-10 animate-fade-up" style={{ animationDelay: "320ms" }}>
+                {hero?.primary_cta_text && (
+                  <Link
+                    to={hero.primary_cta_link || "/projects"}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 active:scale-[0.97] transition-all"
+                  >
+                    {hero.primary_cta_text}
+                    <ArrowRight size={16} />
+                  </Link>
+                )}
+                {hero?.secondary_cta_text && (
+                  <Link
+                    to={hero.secondary_cta_link || "/contact"}
+                    className="inline-flex items-center gap-2 px-6 py-3 border border-hero-foreground/20 text-hero-foreground font-semibold rounded-lg hover:bg-hero-foreground/5 active:scale-[0.97] transition-all"
+                  >
+                    {hero.secondary_cta_text}
+                  </Link>
+                )}
+              </div>
+
+              {(socialLinks ?? []).length > 0 && (
+                <div className="flex gap-2 animate-fade-up" style={{ animationDelay: "400ms" }}>
+                  {(socialLinks ?? []).map((link) => (
+                    <a
+                      key={link.id}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2.5 rounded-lg text-hero-foreground/40 hover:text-hero-foreground hover:bg-hero-foreground/5 transition-all"
+                      aria-label={link.platform}
+                    >
+                      {socialIconMap[link.platform.toLowerCase()] || <ExternalLink size={18} />}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Stats Strip */}
+      {isSectionVisible("stats") && profile && (
+        <RevealSection>
+          <section className="border-b border-border bg-surface-sunken">
+            <div className="container py-10 flex flex-wrap justify-center gap-12 md:gap-20">
+              {[
+                { label: "Projects", value: profile.projects_completed, icon: <Code2 size={20} /> },
+                { label: "Years Experience", value: profile.years_experience, icon: <Briefcase size={20} /> },
+                { label: "Skills", value: (skills ?? []).length, icon: <Star size={20} /> },
+              ].map((stat) => (
+                <div key={stat.label} className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/8 text-primary">{stat.icon}</div>
+                  <div>
+                    <p className="text-2xl font-bold tabular-nums">{stat.value || 0}</p>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider">{stat.label}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </RevealSection>
+      )}
+
+      {/* Featured Projects */}
+      {isSectionVisible("featured_projects") && (projects ?? []).length > 0 && (
+        <RevealSection>
+          <section className="py-20 md:py-28">
+            <div className="container">
+              <div className="flex items-end justify-between mb-12">
+                <div>
+                  <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">
+                    {getSectionData("featured_projects")?.section_subtitle || "Portfolio"}
+                  </p>
+                  <h2 className="text-3xl md:text-4xl font-bold text-balance">
+                    {getSectionData("featured_projects")?.section_title || "Featured Projects"}
+                  </h2>
+                </div>
+                <Link to="/projects" className="hidden md:inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
+                  View all <ArrowRight size={14} />
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {(projects ?? []).slice(0, 6).map((project, i) => (
+                  <RevealSection key={project.id} delay={i * 80}>
+                    <Link
+                      to={`/projects/${project.slug}`}
+                      className="group block bg-card rounded-xl overflow-hidden border border-border shadow-sm hover:shadow-lg hover:border-primary/20 transition-all duration-300"
+                    >
+                      {project.image_url && (
+                        <div className="aspect-video overflow-hidden bg-muted">
+                          <img
+                            src={project.image_url}
+                            alt={project.title}
+                            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                          />
+                        </div>
+                      )}
+                      <div className="p-5">
+                        <h3 className="font-semibold text-lg mb-1.5 group-hover:text-primary transition-colors">{project.title}</h3>
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{project.short_description}</p>
+                        {project.tags && project.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5">
+                            {project.tags.slice(0, 4).map((tag) => (
+                              <span key={tag} className="px-2 py-0.5 text-xs font-medium rounded-md bg-muted text-muted-foreground">{tag}</span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </Link>
+                  </RevealSection>
+                ))}
+              </div>
+              <div className="md:hidden mt-8 text-center">
+                <Link to="/projects" className="inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+                  View all projects <ArrowRight size={14} />
+                </Link>
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+      )}
+
+      {/* Skills Preview */}
+      {isSectionVisible("skills") && Object.keys(skillsByCategory).length > 0 && (
+        <RevealSection>
+          <section className="py-20 md:py-28 bg-surface-sunken">
+            <div className="container">
+              <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">
+                {getSectionData("skills")?.section_subtitle || "Expertise"}
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-12 text-balance">
+                {getSectionData("skills")?.section_title || "Skills & Technologies"}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {Object.entries(skillsByCategory).map(([category, items]) => (
+                  <div key={category} className="bg-card rounded-xl p-6 border border-border">
+                    <h3 className="font-semibold capitalize mb-4 text-sm uppercase tracking-wider text-muted-foreground">{category}</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {(items ?? []).map((skill) => (
+                        <span key={skill.id} className="px-3 py-1.5 text-sm font-medium rounded-lg bg-muted text-foreground">
+                          {skill.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+      )}
+
+      {/* About Preview */}
+      {isSectionVisible("about") && profile?.short_intro && (
+        <RevealSection>
+          <section className="py-20 md:py-28">
+            <div className="container">
+              <div className="max-w-2xl mx-auto text-center">
+                <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">About</p>
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 text-balance">
+                  {getSectionData("about")?.section_title || "A Little About Me"}
+                </h2>
+                <p className="text-muted-foreground leading-relaxed mb-8 text-pretty">{profile.short_intro}</p>
+                {profile.location && (
+                  <p className="inline-flex items-center gap-1.5 text-sm text-muted-foreground mb-6">
+                    <MapPin size={14} /> {profile.location}
+                  </p>
+                )}
+                <div>
+                  <Link to="/about" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+                    Read more <ArrowRight size={14} />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+      )}
+
+      {/* Experience Preview */}
+      {isSectionVisible("experience") && (experiences ?? []).length > 0 && (
+        <RevealSection>
+          <section className="py-20 md:py-28 bg-surface-sunken">
+            <div className="container">
+              <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">Career</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-12 text-balance">
+                {getSectionData("experience")?.section_title || "Experience"}
+              </h2>
+              <div className="max-w-2xl space-y-6">
+                {(experiences ?? []).slice(0, 4).map((exp, i) => (
+                  <RevealSection key={exp.id} delay={i * 80}>
+                    <div className="flex gap-4 p-5 bg-card rounded-xl border border-border">
+                      {exp.org_logo_url && (
+                        <img src={exp.org_logo_url} alt={exp.organization} className="w-10 h-10 rounded-lg object-contain flex-shrink-0" />
+                      )}
+                      <div>
+                        <h3 className="font-semibold">{exp.role}</h3>
+                        <p className="text-sm text-muted-foreground">{exp.organization} · {exp.start_date} — {exp.is_current ? "Present" : exp.end_date}</p>
+                      </div>
+                    </div>
+                  </RevealSection>
+                ))}
+              </div>
+              <div className="mt-8">
+                <Link to="/experience" className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
+                  View full experience <ArrowRight size={14} />
+                </Link>
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+      )}
+
+      {/* Testimonials */}
+      {isSectionVisible("testimonials") && (testimonials ?? []).length > 0 && (
+        <RevealSection>
+          <section className="py-20 md:py-28">
+            <div className="container">
+              <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">Testimonials</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-12 text-balance">
+                {getSectionData("testimonials")?.section_title || "What People Say"}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+                {(testimonials ?? []).slice(0, 4).map((t, i) => (
+                  <RevealSection key={t.id} delay={i * 80}>
+                    <div className="p-6 bg-card rounded-xl border border-border">
+                      <p className="text-foreground leading-relaxed mb-4 italic">"{t.content}"</p>
+                      <div className="flex items-center gap-3">
+                        {t.author_image_url && (
+                          <img src={t.author_image_url} alt={t.author_name} className="w-10 h-10 rounded-full object-cover" />
+                        )}
+                        <div>
+                          <p className="font-semibold text-sm">{t.author_name}</p>
+                          <p className="text-xs text-muted-foreground">{t.author_title}{t.author_company ? ` at ${t.author_company}` : ""}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </RevealSection>
+                ))}
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+      )}
+
+      {/* Contact CTA */}
+      {isSectionVisible("contact_cta") && (
+        <RevealSection>
+          <section className="py-20 md:py-28 bg-hero text-hero-foreground">
+            <div className="container text-center">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">
+                {getSectionData("contact_cta")?.section_title || "Let's Work Together"}
+              </h2>
+              <p className="text-hero-foreground/50 mb-8 max-w-md mx-auto">
+                {getSectionData("contact_cta")?.section_subtitle || "Have a project in mind? I'd love to hear about it."}
+              </p>
+              <Link
+                to="/contact"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 active:scale-[0.97] transition-all"
+              >
+                Get in Touch <ArrowRight size={16} />
+              </Link>
+            </div>
+          </section>
+        </RevealSection>
+      )}
+    </PublicLayout>
+  );
+}
