@@ -57,12 +57,6 @@ export default function AdminLayout() {
           <Link to="/" className="flex items-center gap-3 px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted/50 transition-colors">
             <Globe size={16} /> View Site
           </Link>
-          <button
-            onClick={signOut}
-            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-destructive hover:bg-destructive/8 rounded-lg transition-colors"
-          >
-            <LogOut size={16} /> Sign Out
-          </button>
         </div>
       </aside>
 

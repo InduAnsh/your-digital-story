@@ -43,6 +43,7 @@ const App = () => (
 
           {/* Admin routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
+          {/* Login bypassed for testing - anyone can access /admin */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="profile" element={<AdminProfile />} />
