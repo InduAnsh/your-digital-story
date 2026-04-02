@@ -2,7 +2,7 @@ import { Link, useLocation, Outlet } from "react-router-dom";
 import { 
   LayoutDashboard, User, FolderKanban, Briefcase, Award, 
   MessageSquare, Settings, Globe, Navigation, FileText, 
-  LogOut, Star, GraduationCap, Image, Menu, X
+  Star, GraduationCap, Image, Menu, X
 } from "lucide-react";
 import { useState } from "react";
 
