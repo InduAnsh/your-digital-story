@@ -25,12 +25,8 @@ const navItems = [
 ];
 
 export default function AdminLayout() {
-  const { session, loading, signOut } = useAuth();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><p className="text-muted-foreground">Loading...</p></div>;
-  if (!session) return <Navigate to="/admin/login" replace />;
 
   return (
     <div className="min-h-screen flex bg-surface-sunken">
