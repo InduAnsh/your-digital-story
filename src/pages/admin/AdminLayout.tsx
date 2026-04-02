@@ -1,5 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
-import { Navigate, Link, useLocation, Outlet } from "react-router-dom";
+import { Link, useLocation, Outlet } from "react-router-dom";
 import { 
   LayoutDashboard, User, FolderKanban, Briefcase, Award, 
   MessageSquare, Settings, Globe, Navigation, FileText, 
