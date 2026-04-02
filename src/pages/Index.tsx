@@ -59,7 +59,7 @@ export default function HomePage() {
               )}
               {(hero?.description || profile?.short_intro) && (
                 <p className="text-base md:text-lg text-hero-foreground/50 max-w-xl leading-relaxed mb-8 animate-fade-up text-pretty" style={{ animationDelay: "240ms" }}>
-                  {hero.description || profile?.short_intro}
+                  {hero?.description || profile?.short_intro}
                 </p>
               )}
 
