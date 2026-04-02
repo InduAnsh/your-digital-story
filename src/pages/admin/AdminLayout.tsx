@@ -1,9 +1,8 @@
-import { useAuth } from "@/hooks/useAuth";
-import { Navigate, Link, useLocation, Outlet } from "react-router-dom";
+import { Link, useLocation, Outlet } from "react-router-dom";
 import { 
   LayoutDashboard, User, FolderKanban, Briefcase, Award, 
   MessageSquare, Settings, Globe, Navigation, FileText, 
-  LogOut, Star, GraduationCap, Image, Menu, X
+  Star, GraduationCap, Image, Menu, X
 } from "lucide-react";
 import { useState } from "react";
 
@@ -25,12 +24,8 @@ const navItems = [
 ];
 
 export default function AdminLayout() {
-  const { session, loading, signOut } = useAuth();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><p className="text-muted-foreground">Loading...</p></div>;
-  if (!session) return <Navigate to="/admin/login" replace />;
 
   return (
     <div className="min-h-screen flex bg-surface-sunken">
@@ -62,12 +57,6 @@ export default function AdminLayout() {
           <Link to="/" className="flex items-center gap-3 px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted/50 transition-colors">
             <Globe size={16} /> View Site
           </Link>
-          <button
-            onClick={signOut}
-            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-destructive hover:bg-destructive/8 rounded-lg transition-colors"
-          >
-            <LogOut size={16} /> Sign Out
-          </button>
         </div>
       </aside>
 
