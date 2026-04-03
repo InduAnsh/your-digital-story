@@ -1,12 +1,14 @@
 import PublicLayout from "@/components/PublicLayout";
 import RevealSection from "@/components/RevealSection";
-import { useProfile, useEducation, useCertifications } from "@/hooks/usePortfolioData";
-import { MapPin, Download } from "lucide-react";
+import { useProfile, useEducation, useCertifications, useInterests } from "@/hooks/usePortfolioData";
+import { MapPin, Download, Compass } from "lucide-react";
 
 export default function AboutPage() {
   const { data: profile } = useProfile();
   const { data: education } = useEducation();
   const { data: certifications } = useCertifications();
+  const { data: interests } = useInterests();
+  const p = profile as any;
 
   return (
     <PublicLayout>
@@ -45,6 +47,32 @@ export default function AboutPage() {
               </div>
             </RevealSection>
 
+            {/* Engineering Interests */}
+            {p?.engineering_interests && (
+              <RevealSection delay={120}>
+                <div className="p-6 bg-card rounded-xl border border-border mb-8">
+                  <h2 className="text-lg font-bold mb-3">Engineering Interests</h2>
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{p.engineering_interests}</p>
+                </div>
+              </RevealSection>
+            )}
+
+            {/* Seeking Statement */}
+            {p?.seeking_statement && (
+              <RevealSection delay={140}>
+                <div className="p-6 bg-primary/5 rounded-xl border border-primary/10 mb-8">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Compass size={16} className="text-primary" />
+                    <h2 className="text-lg font-bold">What I'm Looking For</h2>
+                  </div>
+                  <p className="text-muted-foreground leading-relaxed">{p.seeking_statement}</p>
+                  {p.preferred_roles && (
+                    <p className="text-sm text-muted-foreground mt-3 italic">{p.preferred_roles}</p>
+                  )}
+                </div>
+              </RevealSection>
+            )}
+
             {profile?.resume_url && (
               <RevealSection delay={160}>
                 <a
@@ -71,6 +99,23 @@ export default function AboutPage() {
                       <p className="text-sm text-muted-foreground">{edu.institution} · {edu.field_of_study}</p>
                       <p className="text-xs text-muted-foreground mt-1">{edu.start_year} — {edu.end_year}</p>
                       {edu.description && <p className="text-sm text-muted-foreground mt-2">{edu.description}</p>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </RevealSection>
+          )}
+
+          {/* Interests */}
+          {(interests ?? []).length > 0 && (
+            <RevealSection>
+              <div className="max-w-3xl mt-16">
+                <h2 className="text-2xl font-bold mb-8">Areas of Technical Interest</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {(interests ?? []).map((int: any) => (
+                    <div key={int.id} className="p-4 bg-card rounded-xl border border-border text-center">
+                      <h3 className="font-semibold text-sm">{int.title}</h3>
+                      {int.description && <p className="text-xs text-muted-foreground mt-1">{int.description}</p>}
                     </div>
                   ))}
                 </div>
