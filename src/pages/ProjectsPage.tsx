@@ -3,7 +3,7 @@ import RevealSection from "@/components/RevealSection";
 import { useProjects } from "@/hooks/usePortfolioData";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Search, ExternalLink, Github } from "lucide-react";
+import { Search, ExternalLink, Github, Calendar, Users } from "lucide-react";
 
 export default function ProjectsPage() {
   const { data: projects } = useProjects();
@@ -28,10 +28,9 @@ export default function ProjectsPage() {
           <RevealSection>
             <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">Portfolio</p>
             <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-balance leading-[1.1]">Projects</h1>
-            <p className="text-muted-foreground max-w-xl mb-10">A collection of projects I've worked on.</p>
+            <p className="text-muted-foreground max-w-xl mb-10">A collection of engineering projects, from concept through testing and iteration.</p>
           </RevealSection>
 
-          {/* Search & filters */}
           <RevealSection delay={80}>
             <div className="flex flex-col md:flex-row gap-4 mb-10">
               <div className="relative flex-1 max-w-sm">
@@ -70,7 +69,6 @@ export default function ProjectsPage() {
             </div>
           </RevealSection>
 
-          {/* Featured */}
           {featured.length > 0 && (
             <div className="mb-12">
               <h2 className="text-lg font-semibold mb-6">Featured</h2>
@@ -84,7 +82,6 @@ export default function ProjectsPage() {
             </div>
           )}
 
-          {/* All */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {rest.map((project, i) => (
               <RevealSection key={project.id} delay={i * 60}>
@@ -113,10 +110,27 @@ function ProjectCard({ project }: { project: any }) {
         )}
       </Link>
       <div className="p-5 flex-1 flex flex-col">
+        {/* Context tag */}
+        {project.project_context && project.project_context !== "personal" && (
+          <span className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-md bg-primary/8 text-primary w-fit mb-2">
+            {project.project_context.replace(/_/g, " ")}
+          </span>
+        )}
         <Link to={`/projects/${project.slug}`}>
           <h3 className="font-semibold text-lg mb-1.5 group-hover:text-primary transition-colors">{project.title}</h3>
         </Link>
         <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{project.short_description}</p>
+
+        {/* Meta row */}
+        <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground mb-3">
+          {project.project_date && (
+            <span className="inline-flex items-center gap-1"><Calendar size={11} /> {project.project_date}</span>
+          )}
+          {project.team_size && (
+            <span className="inline-flex items-center gap-1"><Users size={11} /> {project.is_individual ? "Individual" : `Team of ${project.team_size}`}</span>
+          )}
+        </div>
+
         {project.tags && project.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-4">
             {project.tags.slice(0, 4).map((tag: string) => (
@@ -125,8 +139,11 @@ function ProjectCard({ project }: { project: any }) {
           </div>
         )}
         <div className="mt-auto flex items-center gap-3">
+          <Link to={`/projects/${project.slug}`} className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
+            View Details →
+          </Link>
           {project.live_url && (
-            <a href={project.live_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
+            <a href={project.live_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground">
               <ExternalLink size={12} /> Live
             </a>
           )}

@@ -43,7 +43,6 @@ const App = () => (
 
           {/* Admin routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
-          {/* Login bypassed for testing - anyone can access /admin */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="profile" element={<AdminProfile />} />
@@ -52,7 +51,13 @@ const App = () => (
             <Route path="experience" element={<AdminCrudPage type="experience" />} />
             <Route path="skills" element={<AdminCrudPage type="skill" />} />
             <Route path="education" element={<AdminCrudPage type="education" />} />
+            <Route path="coursework" element={<AdminCrudPage type="coursework" />} />
+            <Route path="leadership" element={<AdminCrudPage type="leadership_activity" />} />
+            <Route path="achievements" element={<AdminCrudPage type="achievement" />} />
+            <Route path="highlights" element={<AdminCrudPage type="technical_highlight" />} />
+            <Route path="interests" element={<AdminCrudPage type="interest" />} />
             <Route path="testimonials" element={<AdminCrudPage type="testimonial" />} />
+            <Route path="certifications" element={<AdminCrudPage type="certification" />} />
             <Route path="navigation" element={<AdminCrudPage type="nav_item" />} />
             <Route path="social-links" element={<AdminCrudPage type="social_link" />} />
             <Route path="sections" element={<AdminSections />} />

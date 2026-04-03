@@ -8,8 +8,17 @@ export default function ExperiencePage() {
   const grouped = {
     work: (experiences ?? []).filter((e) => e.experience_type === "work"),
     internship: (experiences ?? []).filter((e) => e.experience_type === "internship"),
-    volunteer: (experiences ?? []).filter((e) => e.experience_type === "volunteer"),
+    research: (experiences ?? []).filter((e) => e.experience_type === "research"),
     leadership: (experiences ?? []).filter((e) => e.experience_type === "leadership"),
+    volunteer: (experiences ?? []).filter((e) => e.experience_type === "volunteer"),
+  };
+
+  const typeLabels: Record<string, string> = {
+    work: "Work Experience",
+    internship: "Internship Experience",
+    research: "Research Experience",
+    leadership: "Leadership",
+    volunteer: "Volunteer Experience",
   };
 
   return (
@@ -25,7 +34,7 @@ export default function ExperiencePage() {
             items.length > 0 ? (
               <RevealSection key={type}>
                 <div className="mb-12">
-                  <h2 className="text-lg font-semibold capitalize mb-6">{type}</h2>
+                  <h2 className="text-lg font-semibold mb-6">{typeLabels[type] || type}</h2>
                   <div className="relative pl-6 border-l-2 border-border space-y-8">
                     {items.map((exp, i) => (
                       <RevealSection key={exp.id} delay={i * 60}>
@@ -36,18 +45,18 @@ export default function ExperiencePage() {
                               {exp.org_logo_url && (
                                 <img src={exp.org_logo_url} alt={exp.organization} className="w-10 h-10 rounded-lg object-contain flex-shrink-0" />
                               )}
-                              <div>
+                              <div className="flex-1">
                                 <h3 className="font-semibold">{exp.role}</h3>
                                 <p className="text-sm text-muted-foreground">{exp.organization}{exp.location ? ` · ${exp.location}` : ""}</p>
                                 <p className="text-xs text-muted-foreground mt-0.5">{exp.start_date} — {exp.is_current ? "Present" : exp.end_date}</p>
                               </div>
                             </div>
                             {exp.description && (
-                              <p className="text-sm text-muted-foreground mt-3 leading-relaxed">{exp.description}</p>
+                              <p className="text-sm text-muted-foreground mt-3 leading-relaxed whitespace-pre-line">{exp.description}</p>
                             )}
-                            {exp.achievements && exp.achievements.length > 0 && (
+                            {exp.achievements && exp.achievements.length > 0 && exp.achievements[0] !== "" && (
                               <ul className="mt-3 space-y-1">
-                                {exp.achievements.map((a, idx) => (
+                                {exp.achievements.filter(Boolean).map((a, idx) => (
                                   <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
                                     <span className="text-primary mt-1">•</span> {a}
                                   </li>

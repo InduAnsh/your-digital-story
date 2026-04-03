@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          achievement_type: string | null
+          created_at: string
+          date: string | null
+          description: string | null
+          display_order: number | null
+          id: string
+          is_visible: boolean | null
+          issuer: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          achievement_type?: string | null
+          created_at?: string
+          date?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          issuer?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          achievement_type?: string | null
+          created_at?: string
+          date?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          issuer?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       certifications: {
         Row: {
           created_at: string
@@ -115,6 +154,39 @@ export type Database = {
           show_location?: boolean | null
           show_phone?: boolean | null
           success_message?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      coursework: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          display_order: number | null
+          id: string
+          is_visible: boolean | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          name?: string
           updated_at?: string
         }
         Relationships: []
@@ -296,6 +368,84 @@ export type Database = {
         }
         Relationships: []
       }
+      interests: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number | null
+          icon: string | null
+          id: string
+          is_visible: boolean | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_visible?: boolean | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_visible?: boolean | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      leadership_activities: {
+        Row: {
+          accomplishments: string | null
+          created_at: string
+          description: string | null
+          display_order: number | null
+          end_date: string | null
+          id: string
+          is_visible: boolean | null
+          organization: string
+          responsibilities: string | null
+          start_date: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          accomplishments?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          end_date?: string | null
+          id?: string
+          is_visible?: boolean | null
+          organization?: string
+          responsibilities?: string | null
+          start_date?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          accomplishments?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          end_date?: string | null
+          id?: string
+          is_visible?: boolean | null
+          organization?: string
+          responsibilities?: string | null
+          start_date?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       media_assets: {
         Row: {
           alt_text: string | null
@@ -403,54 +553,66 @@ export type Database = {
       }
       profile: {
         Row: {
+          areas_of_interest: string[] | null
           availability_status: string | null
           availability_text: string | null
           created_at: string
           email: string | null
+          engineering_interests: string | null
           full_bio: string | null
           full_name: string
           id: string
           location: string | null
           phone: string | null
+          preferred_roles: string | null
           profile_image_url: string | null
           projects_completed: number | null
           resume_url: string | null
+          seeking_statement: string | null
           short_intro: string | null
           title: string | null
           updated_at: string
           years_experience: number | null
         }
         Insert: {
+          areas_of_interest?: string[] | null
           availability_status?: string | null
           availability_text?: string | null
           created_at?: string
           email?: string | null
+          engineering_interests?: string | null
           full_bio?: string | null
           full_name?: string
           id?: string
           location?: string | null
           phone?: string | null
+          preferred_roles?: string | null
           profile_image_url?: string | null
           projects_completed?: number | null
           resume_url?: string | null
+          seeking_statement?: string | null
           short_intro?: string | null
           title?: string | null
           updated_at?: string
           years_experience?: number | null
         }
         Update: {
+          areas_of_interest?: string[] | null
           availability_status?: string | null
           availability_text?: string | null
           created_at?: string
           email?: string | null
+          engineering_interests?: string | null
           full_bio?: string | null
           full_name?: string
           id?: string
           location?: string | null
           phone?: string | null
+          preferred_roles?: string | null
           profile_image_url?: string | null
           projects_completed?: number | null
           resume_url?: string | null
+          seeking_statement?: string | null
           short_intro?: string | null
           title?: string | null
           updated_at?: string
@@ -499,17 +661,25 @@ export type Database = {
       projects: {
         Row: {
           banner_url: string | null
+          challenges: string | null
           created_at: string
           demo_url: string | null
           display_order: number | null
+          duration: string | null
+          engineering_analysis: string | null
           full_description: string | null
           id: string
           image_url: string | null
           is_featured: boolean | null
+          is_individual: boolean | null
           is_visible: boolean | null
+          key_metrics: Json | null
           live_url: string | null
+          my_role: string | null
           problem: string | null
           process: string | null
+          project_context: string | null
+          project_date: string | null
           repo_url: string | null
           results: string | null
           short_description: string | null
@@ -517,23 +687,32 @@ export type Database = {
           solution: string | null
           status: string | null
           tags: string[] | null
+          team_size: string | null
           title: string
           tools: string[] | null
           updated_at: string
         }
         Insert: {
           banner_url?: string | null
+          challenges?: string | null
           created_at?: string
           demo_url?: string | null
           display_order?: number | null
+          duration?: string | null
+          engineering_analysis?: string | null
           full_description?: string | null
           id?: string
           image_url?: string | null
           is_featured?: boolean | null
+          is_individual?: boolean | null
           is_visible?: boolean | null
+          key_metrics?: Json | null
           live_url?: string | null
+          my_role?: string | null
           problem?: string | null
           process?: string | null
+          project_context?: string | null
+          project_date?: string | null
           repo_url?: string | null
           results?: string | null
           short_description?: string | null
@@ -541,23 +720,32 @@ export type Database = {
           solution?: string | null
           status?: string | null
           tags?: string[] | null
+          team_size?: string | null
           title: string
           tools?: string[] | null
           updated_at?: string
         }
         Update: {
           banner_url?: string | null
+          challenges?: string | null
           created_at?: string
           demo_url?: string | null
           display_order?: number | null
+          duration?: string | null
+          engineering_analysis?: string | null
           full_description?: string | null
           id?: string
           image_url?: string | null
           is_featured?: boolean | null
+          is_individual?: boolean | null
           is_visible?: boolean | null
+          key_metrics?: Json | null
           live_url?: string | null
+          my_role?: string | null
           problem?: string | null
           process?: string | null
+          project_context?: string | null
+          project_date?: string | null
           repo_url?: string | null
           results?: string | null
           short_description?: string | null
@@ -565,6 +753,7 @@ export type Database = {
           solution?: string | null
           status?: string | null
           tags?: string[] | null
+          team_size?: string | null
           title?: string
           tools?: string[] | null
           updated_at?: string
@@ -718,6 +907,39 @@ export type Database = {
           platform?: string
           updated_at?: string
           url?: string
+        }
+        Relationships: []
+      }
+      technical_highlights: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number | null
+          icon: string | null
+          id: string
+          is_visible: boolean | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_visible?: boolean | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_visible?: boolean | null
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }

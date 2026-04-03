@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Plus, Trash2, Save, Eye, EyeOff } from "lucide-react";
 
-type ItemType = "experience" | "skill" | "education" | "testimonial" | "nav_item" | "social_link" | "certification";
+type ItemType = "experience" | "skill" | "education" | "testimonial" | "nav_item" | "social_link" | "certification" | "coursework" | "leadership_activity" | "achievement" | "technical_highlight" | "interest";
 
 interface CrudConfig {
   table: string;
@@ -21,7 +21,8 @@ const configs: Record<ItemType, CrudConfig> = {
       { label: "Location", field: "location" }, { label: "Logo URL", field: "org_logo_url" },
       { label: "Start Date", field: "start_date" }, { label: "End Date", field: "end_date" },
       { label: "Description", field: "description", textarea: true },
-      { label: "Type", field: "experience_type", options: [{ label: "Work", value: "work" }, { label: "Internship", value: "internship" }, { label: "Volunteer", value: "volunteer" }, { label: "Leadership", value: "leadership" }] },
+      { label: "Type", field: "experience_type", options: [{ label: "Work", value: "work" }, { label: "Internship", value: "internship" }, { label: "Research", value: "research" }, { label: "Volunteer", value: "volunteer" }, { label: "Leadership", value: "leadership" }] },
+      { label: "Display Order", field: "display_order", type: "number" },
     ],
     defaultItem: { role: "", organization: "", location: "", org_logo_url: "", start_date: "", end_date: "", description: "", experience_type: "work", is_current: false, is_visible: true, display_order: 0 },
   },
@@ -29,10 +30,21 @@ const configs: Record<ItemType, CrudConfig> = {
     table: "skills", title: "Skills",
     fields: [
       { label: "Name", field: "name" }, { label: "Icon", field: "icon" },
-      { label: "Category", field: "category", options: [{ label: "Technical", value: "technical" }, { label: "Tools", value: "tools" }, { label: "Soft Skills", value: "soft" }, { label: "Languages", value: "languages" }] },
+      { label: "Category", field: "category", options: [
+        { label: "Engineering Software", value: "engineering_software" },
+        { label: "Programming", value: "programming" },
+        { label: "Hardware / Fabrication", value: "hardware_fabrication" },
+        { label: "Analysis / Methods", value: "analysis_methods" },
+        { label: "Laboratory Tools", value: "laboratory_tools" },
+        { label: "Soft Skills", value: "soft_skills" },
+        { label: "Technical", value: "technical" },
+        { label: "Tools", value: "tools" },
+        { label: "Languages", value: "languages" },
+      ] },
       { label: "Proficiency", field: "proficiency", type: "number" },
+      { label: "Display Order", field: "display_order", type: "number" },
     ],
-    defaultItem: { name: "", category: "technical", icon: "", proficiency: 80, is_visible: true, display_order: 0 },
+    defaultItem: { name: "", category: "engineering_software", icon: "", proficiency: 80, is_visible: true, display_order: 0 },
   },
   education: {
     table: "education", title: "Education",
@@ -40,6 +52,7 @@ const configs: Record<ItemType, CrudConfig> = {
       { label: "Degree", field: "degree" }, { label: "Institution", field: "institution" },
       { label: "Field of Study", field: "field_of_study" }, { label: "Start Year", field: "start_year" },
       { label: "End Year", field: "end_year" }, { label: "Description", field: "description", textarea: true },
+      { label: "Display Order", field: "display_order", type: "number" },
     ],
     defaultItem: { degree: "", institution: "", field_of_study: "", start_year: "", end_year: "", description: "", is_visible: true, display_order: 0 },
   },
@@ -49,6 +62,7 @@ const configs: Record<ItemType, CrudConfig> = {
       { label: "Author Name", field: "author_name" }, { label: "Author Title", field: "author_title" },
       { label: "Author Company", field: "author_company" }, { label: "Author Image URL", field: "author_image_url" },
       { label: "Content", field: "content", textarea: true }, { label: "Rating", field: "rating", type: "number" },
+      { label: "Display Order", field: "display_order", type: "number" },
     ],
     defaultItem: { author_name: "", author_title: "", author_company: "", author_image_url: "", content: "", rating: 5, is_featured: false, is_visible: true, display_order: 0 },
   },
@@ -74,8 +88,72 @@ const configs: Record<ItemType, CrudConfig> = {
     fields: [
       { label: "Name", field: "name" }, { label: "Issuer", field: "issuer" },
       { label: "Issue Date", field: "issue_date" }, { label: "Credential URL", field: "credential_url" },
+      { label: "Display Order", field: "display_order", type: "number" },
     ],
     defaultItem: { name: "", issuer: "", issue_date: "", credential_url: "", is_visible: true, display_order: 0 },
+  },
+  coursework: {
+    table: "coursework", title: "Coursework",
+    fields: [
+      { label: "Name", field: "name" },
+      { label: "Category", field: "category", options: [
+        { label: "Core", value: "core" }, { label: "Elective", value: "elective" },
+        { label: "Lab", value: "lab" }, { label: "Math", value: "math" },
+      ] },
+      { label: "Description", field: "description", textarea: true },
+      { label: "Display Order", field: "display_order", type: "number" },
+    ],
+    defaultItem: { name: "", category: "core", description: "", is_visible: true, display_order: 0 },
+  },
+  leadership_activity: {
+    table: "leadership_activities", title: "Leadership & Activities",
+    fields: [
+      { label: "Title / Role", field: "title" },
+      { label: "Organization", field: "organization" },
+      { label: "Start Date", field: "start_date" },
+      { label: "End Date", field: "end_date" },
+      { label: "Description", field: "description", textarea: true },
+      { label: "Responsibilities", field: "responsibilities", textarea: true },
+      { label: "Accomplishments", field: "accomplishments", textarea: true },
+      { label: "Display Order", field: "display_order", type: "number" },
+    ],
+    defaultItem: { title: "", organization: "", start_date: "", end_date: "", description: "", responsibilities: "", accomplishments: "", is_visible: true, display_order: 0 },
+  },
+  achievement: {
+    table: "achievements", title: "Achievements & Awards",
+    fields: [
+      { label: "Title", field: "title" },
+      { label: "Issuer", field: "issuer" },
+      { label: "Date", field: "date" },
+      { label: "Description", field: "description", textarea: true },
+      { label: "Type", field: "achievement_type", options: [
+        { label: "Award", value: "award" }, { label: "Scholarship", value: "scholarship" },
+        { label: "Certification", value: "certification" }, { label: "Competition", value: "competition" },
+        { label: "Dean's List", value: "deans_list" }, { label: "Training", value: "training" },
+      ] },
+      { label: "Display Order", field: "display_order", type: "number" },
+    ],
+    defaultItem: { title: "", issuer: "", date: "", description: "", achievement_type: "award", is_visible: true, display_order: 0 },
+  },
+  technical_highlight: {
+    table: "technical_highlights", title: "Technical Highlights",
+    fields: [
+      { label: "Title", field: "title" },
+      { label: "Description", field: "description", textarea: true },
+      { label: "Icon", field: "icon" },
+      { label: "Display Order", field: "display_order", type: "number" },
+    ],
+    defaultItem: { title: "", description: "", icon: "", is_visible: true, display_order: 0 },
+  },
+  interest: {
+    table: "interests", title: "Technical Interests",
+    fields: [
+      { label: "Title", field: "title" },
+      { label: "Description", field: "description", textarea: true },
+      { label: "Icon", field: "icon" },
+      { label: "Display Order", field: "display_order", type: "number" },
+    ],
+    defaultItem: { title: "", description: "", icon: "", is_visible: true, display_order: 0 },
   },
 };
 

@@ -2,7 +2,7 @@ import { Link, useLocation, Outlet } from "react-router-dom";
 import { 
   LayoutDashboard, User, FolderKanban, Briefcase, Award, 
   MessageSquare, Settings, Globe, Navigation, FileText, 
-  Star, GraduationCap, Image, Menu, X
+  Star, GraduationCap, Image, Menu, X, BookOpen, Users, Trophy, Target, Compass
 } from "lucide-react";
 import { useState } from "react";
 
@@ -14,7 +14,13 @@ const navItems = [
   { label: "Experience", path: "/admin/experience", icon: Briefcase },
   { label: "Skills", path: "/admin/skills", icon: Award },
   { label: "Education", path: "/admin/education", icon: GraduationCap },
+  { label: "Coursework", path: "/admin/coursework", icon: BookOpen },
+  { label: "Leadership", path: "/admin/leadership", icon: Users },
+  { label: "Achievements", path: "/admin/achievements", icon: Trophy },
+  { label: "Highlights", path: "/admin/highlights", icon: Target },
+  { label: "Interests", path: "/admin/interests", icon: Compass },
   { label: "Testimonials", path: "/admin/testimonials", icon: Star },
+  { label: "Certifications", path: "/admin/certifications", icon: Award },
   { label: "Navigation", path: "/admin/navigation", icon: Navigation },
   { label: "Social Links", path: "/admin/social-links", icon: Globe },
   { label: "Sections", path: "/admin/sections", icon: FileText },
@@ -29,7 +35,6 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen flex bg-surface-sunken">
-      {/* Sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-40 w-64 bg-card border-r border-border flex flex-col transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="p-5 border-b border-border flex items-center justify-between">
           <Link to="/admin" className="font-bold text-lg">Admin Panel</Link>
@@ -60,10 +65,8 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      {/* Overlay */}
       {sidebarOpen && <div className="fixed inset-0 bg-foreground/20 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />}
 
-      {/* Main */}
       <div className="flex-1 md:ml-64">
         <header className="sticky top-0 z-20 bg-card/80 backdrop-blur-xl border-b border-border h-14 flex items-center px-5">
           <button className="md:hidden mr-3" onClick={() => setSidebarOpen(true)}><Menu size={20} /></button>

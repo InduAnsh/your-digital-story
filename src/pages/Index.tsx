@@ -1,8 +1,8 @@
 import PublicLayout from "@/components/PublicLayout";
 import RevealSection from "@/components/RevealSection";
-import { useProfile, useHeroSection, useSocialLinks, useProjects, useSkills, useExperiences, useTestimonials, usePageSections } from "@/hooks/usePortfolioData";
+import { useProfile, useHeroSection, useSocialLinks, useProjects, useSkills, useExperiences, useTestimonials, usePageSections, useTechnicalHighlights, useCoursework, useLeadershipActivities, useAchievements, useInterests } from "@/hooks/usePortfolioData";
 import { Link } from "react-router-dom";
-import { ArrowRight, ExternalLink, Github, Linkedin, Twitter, Mail, MapPin, Briefcase, Code2, Star } from "lucide-react";
+import { ArrowRight, ExternalLink, Github, Linkedin, Twitter, Mail, MapPin, Briefcase, Code2, Star, Download, Compass, Trophy, BookOpen, Users, Target } from "lucide-react";
 
 const socialIconMap: Record<string, React.ReactNode> = {
   github: <Github size={18} />,
@@ -16,10 +16,16 @@ export default function HomePage() {
   const { data: hero } = useHeroSection();
   const { data: socialLinks } = useSocialLinks();
   const { data: projects } = useProjects(true);
+  const { data: allProjects } = useProjects();
   const { data: skills } = useSkills();
   const { data: experiences } = useExperiences();
   const { data: testimonials } = useTestimonials(true);
   const { data: sections } = usePageSections("home");
+  const { data: highlights } = useTechnicalHighlights();
+  const { data: coursework } = useCoursework();
+  const { data: leadership } = useLeadershipActivities();
+  const { data: achievements } = useAchievements();
+  const { data: interests } = useInterests();
 
   const isSectionVisible = (key: string) => {
     const s = (sections ?? []).find((sec) => sec.section_key === key);
@@ -81,6 +87,16 @@ export default function HomePage() {
                     {hero.secondary_cta_text}
                   </Link>
                 )}
+                {profile?.resume_url && (
+                  <a
+                    href={profile.resume_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 border border-hero-foreground/20 text-hero-foreground font-semibold rounded-lg hover:bg-hero-foreground/5 active:scale-[0.97] transition-all"
+                  >
+                    <Download size={16} /> Resume
+                  </a>
+                )}
               </div>
 
               {(socialLinks ?? []).length > 0 && (
@@ -127,10 +143,35 @@ export default function HomePage() {
         </RevealSection>
       )}
 
+      {/* Technical Highlights */}
+      {(highlights ?? []).length > 0 && (
+        <RevealSection>
+          <section className="py-20 md:py-28">
+            <div className="container">
+              <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">Core Strengths</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-12 text-balance">Technical Highlights</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {(highlights ?? []).map((h: any, i: number) => (
+                  <RevealSection key={h.id} delay={i * 60}>
+                    <div className="p-6 bg-card rounded-xl border border-border hover:border-primary/20 transition-all">
+                      <div className="p-2.5 rounded-lg bg-primary/8 text-primary w-fit mb-4">
+                        <Target size={20} />
+                      </div>
+                      <h3 className="font-semibold mb-2">{h.title}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{h.description}</p>
+                    </div>
+                  </RevealSection>
+                ))}
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+      )}
+
       {/* Featured Projects */}
       {isSectionVisible("featured_projects") && (projects ?? []).length > 0 && (
         <RevealSection>
-          <section className="py-20 md:py-28">
+          <section className="py-20 md:py-28 bg-surface-sunken">
             <div className="container">
               <div className="flex items-end justify-between mb-12">
                 <div>
@@ -162,15 +203,23 @@ export default function HomePage() {
                         </div>
                       )}
                       <div className="p-5">
+                        <div className="flex items-center gap-2 mb-2">
+                          {(project as any).project_context && (project as any).project_context !== "personal" && (
+                            <span className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-md bg-primary/8 text-primary">
+                              {(project as any).project_context}
+                            </span>
+                          )}
+                        </div>
                         <h3 className="font-semibold text-lg mb-1.5 group-hover:text-primary transition-colors">{project.title}</h3>
                         <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{project.short_description}</p>
                         {project.tags && project.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5">
+                          <div className="flex flex-wrap gap-1.5 mb-3">
                             {project.tags.slice(0, 4).map((tag) => (
                               <span key={tag} className="px-2 py-0.5 text-xs font-medium rounded-md bg-muted text-muted-foreground">{tag}</span>
                             ))}
                           </div>
                         )}
+                        <span className="text-xs font-medium text-primary">View Case Study →</span>
                       </div>
                     </Link>
                   </RevealSection>
@@ -186,10 +235,69 @@ export default function HomePage() {
         </RevealSection>
       )}
 
+      {/* Experience Preview */}
+      {isSectionVisible("experience") && (experiences ?? []).length > 0 && (
+        <RevealSection>
+          <section className="py-20 md:py-28">
+            <div className="container">
+              <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">Career</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-12 text-balance">
+                {getSectionData("experience")?.section_title || "Experience"}
+              </h2>
+              <div className="max-w-2xl space-y-6">
+                {(experiences ?? []).slice(0, 4).map((exp, i) => (
+                  <RevealSection key={exp.id} delay={i * 80}>
+                    <div className="flex gap-4 p-5 bg-card rounded-xl border border-border">
+                      {exp.org_logo_url && (
+                        <img src={exp.org_logo_url} alt={exp.organization} className="w-10 h-10 rounded-lg object-contain flex-shrink-0" />
+                      )}
+                      <div className="flex-1">
+                        <h3 className="font-semibold">{exp.role}</h3>
+                        <p className="text-sm text-muted-foreground">{exp.organization} · {exp.start_date} — {exp.is_current ? "Present" : exp.end_date}</p>
+                        {exp.description && (
+                          <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{exp.description}</p>
+                        )}
+                      </div>
+                    </div>
+                  </RevealSection>
+                ))}
+              </div>
+              <div className="mt-8">
+                <Link to="/experience" className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
+                  View full experience <ArrowRight size={14} />
+                </Link>
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+      )}
+
+      {/* Relevant Coursework */}
+      {(coursework ?? []).length > 0 && (
+        <RevealSection>
+          <section className="py-20 md:py-28 bg-surface-sunken">
+            <div className="container">
+              <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">Academic</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-12 text-balance">Relevant Coursework</h2>
+              <div className="flex flex-wrap gap-3">
+                {(coursework ?? []).map((c: any) => (
+                  <div key={c.id} className="px-4 py-2.5 bg-card rounded-xl border border-border text-sm font-medium hover:border-primary/20 transition-all">
+                    <span>{c.name}</span>
+                    {c.category && (
+                      <span className="ml-2 text-[10px] uppercase tracking-wider text-muted-foreground">{c.category}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+      )}
+
       {/* Skills Preview */}
       {isSectionVisible("skills") && Object.keys(skillsByCategory).length > 0 && (
         <RevealSection>
-          <section className="py-20 md:py-28 bg-surface-sunken">
+          <section className="py-20 md:py-28">
             <div className="container">
               <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">
                 {getSectionData("skills")?.section_subtitle || "Expertise"}
@@ -200,12 +308,17 @@ export default function HomePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {Object.entries(skillsByCategory).map(([category, items]) => (
                   <div key={category} className="bg-card rounded-xl p-6 border border-border">
-                    <h3 className="font-semibold capitalize mb-4 text-sm uppercase tracking-wider text-muted-foreground">{category}</h3>
-                    <div className="flex flex-wrap gap-2">
+                    <h3 className="font-semibold capitalize mb-4 text-sm uppercase tracking-wider text-muted-foreground">{category.replace(/_/g, " ")}</h3>
+                    <div className="space-y-2.5">
                       {(items ?? []).map((skill) => (
-                        <span key={skill.id} className="px-3 py-1.5 text-sm font-medium rounded-lg bg-muted text-foreground">
-                          {skill.name}
-                        </span>
+                        <div key={skill.id} className="flex items-center justify-between">
+                          <span className="text-sm font-medium">{skill.name}</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-20 h-1.5 bg-muted rounded-full overflow-hidden">
+                              <div className="h-full bg-primary rounded-full" style={{ width: `${skill.proficiency}%` }} />
+                            </div>
+                          </div>
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -216,17 +329,72 @@ export default function HomePage() {
         </RevealSection>
       )}
 
+      {/* Leadership / Activities */}
+      {(leadership ?? []).length > 0 && (
+        <RevealSection>
+          <section className="py-20 md:py-28 bg-surface-sunken">
+            <div className="container">
+              <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">Involvement</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-12 text-balance">Leadership & Activities</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+                {(leadership ?? []).map((item: any, i: number) => (
+                  <RevealSection key={item.id} delay={i * 60}>
+                    <div className="p-5 bg-card rounded-xl border border-border">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Users size={14} className="text-primary" />
+                        <h3 className="font-semibold">{item.title}</h3>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{item.organization}{item.start_date ? ` · ${item.start_date} — ${item.end_date || "Present"}` : ""}</p>
+                      {item.description && <p className="text-sm text-muted-foreground mt-2 line-clamp-3">{item.description}</p>}
+                    </div>
+                  </RevealSection>
+                ))}
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+      )}
+
+      {/* Achievements / Awards */}
+      {(achievements ?? []).length > 0 && (
+        <RevealSection>
+          <section className="py-20 md:py-28">
+            <div className="container">
+              <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">Recognition</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-12 text-balance">Awards & Certifications</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl">
+                {(achievements ?? []).map((a: any, i: number) => (
+                  <RevealSection key={a.id} delay={i * 60}>
+                    <div className="p-5 bg-card rounded-xl border border-border">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Trophy size={14} className="text-primary" />
+                        <h3 className="font-semibold text-sm">{a.title}</h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground">{a.issuer}{a.date ? ` · ${a.date}` : ""}</p>
+                      {a.description && <p className="text-xs text-muted-foreground mt-2">{a.description}</p>}
+                    </div>
+                  </RevealSection>
+                ))}
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+      )}
+
       {/* About Preview */}
       {isSectionVisible("about") && profile?.short_intro && (
         <RevealSection>
-          <section className="py-20 md:py-28">
+          <section className="py-20 md:py-28 bg-surface-sunken">
             <div className="container">
               <div className="max-w-2xl mx-auto text-center">
                 <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">About</p>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6 text-balance">
                   {getSectionData("about")?.section_title || "A Little About Me"}
                 </h2>
-                <p className="text-muted-foreground leading-relaxed mb-8 text-pretty">{profile.short_intro}</p>
+                <p className="text-muted-foreground leading-relaxed mb-6 text-pretty">{profile.short_intro}</p>
+                {(profile as any).engineering_interests && (
+                  <p className="text-sm text-muted-foreground italic mb-6">{(profile as any).engineering_interests}</p>
+                )}
                 {profile.location && (
                   <p className="inline-flex items-center gap-1.5 text-sm text-muted-foreground mb-6">
                     <MapPin size={14} /> {profile.location}
@@ -243,34 +411,42 @@ export default function HomePage() {
         </RevealSection>
       )}
 
-      {/* Experience Preview */}
-      {isSectionVisible("experience") && (experiences ?? []).length > 0 && (
+      {/* What I'm Looking For */}
+      {(profile as any)?.seeking_statement && (
+        <RevealSection>
+          <section className="py-20 md:py-28">
+            <div className="container">
+              <div className="max-w-2xl mx-auto text-center">
+                <div className="p-2.5 rounded-lg bg-primary/8 text-primary w-fit mx-auto mb-4">
+                  <Compass size={24} />
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 text-balance">What I'm Looking For</h2>
+                <p className="text-muted-foreground leading-relaxed mb-4">{(profile as any).seeking_statement}</p>
+                {(profile as any).preferred_roles && (
+                  <p className="text-sm text-muted-foreground italic">{(profile as any).preferred_roles}</p>
+                )}
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+      )}
+
+      {/* Interests */}
+      {(interests ?? []).length > 0 && (
         <RevealSection>
           <section className="py-20 md:py-28 bg-surface-sunken">
             <div className="container">
-              <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">Career</p>
-              <h2 className="text-3xl md:text-4xl font-bold mb-12 text-balance">
-                {getSectionData("experience")?.section_title || "Experience"}
-              </h2>
-              <div className="max-w-2xl space-y-6">
-                {(experiences ?? []).slice(0, 4).map((exp, i) => (
-                  <RevealSection key={exp.id} delay={i * 80}>
-                    <div className="flex gap-4 p-5 bg-card rounded-xl border border-border">
-                      {exp.org_logo_url && (
-                        <img src={exp.org_logo_url} alt={exp.organization} className="w-10 h-10 rounded-lg object-contain flex-shrink-0" />
-                      )}
-                      <div>
-                        <h3 className="font-semibold">{exp.role}</h3>
-                        <p className="text-sm text-muted-foreground">{exp.organization} · {exp.start_date} — {exp.is_current ? "Present" : exp.end_date}</p>
-                      </div>
+              <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">Direction</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-12 text-balance">Areas of Technical Interest</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-4xl">
+                {(interests ?? []).map((int: any, i: number) => (
+                  <RevealSection key={int.id} delay={i * 60}>
+                    <div className="p-5 bg-card rounded-xl border border-border text-center hover:border-primary/20 transition-all">
+                      <h3 className="font-semibold text-sm mb-1">{int.title}</h3>
+                      {int.description && <p className="text-xs text-muted-foreground">{int.description}</p>}
                     </div>
                   </RevealSection>
                 ))}
-              </div>
-              <div className="mt-8">
-                <Link to="/experience" className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
-                  View full experience <ArrowRight size={14} />
-                </Link>
               </div>
             </div>
           </section>
@@ -317,15 +493,27 @@ export default function HomePage() {
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">
                 {getSectionData("contact_cta")?.section_title || "Let's Work Together"}
               </h2>
-              <p className="text-hero-foreground/50 mb-8 max-w-md mx-auto">
-                {getSectionData("contact_cta")?.section_subtitle || "Have a project in mind? I'd love to hear about it."}
+              <p className="text-hero-foreground/50 mb-4 max-w-md mx-auto">
+                {getSectionData("contact_cta")?.section_subtitle || "Available for internship and engineering opportunities."}
               </p>
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 px-8 py-3.5 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 active:scale-[0.97] transition-all"
-              >
-                Get in Touch <ArrowRight size={16} />
-              </Link>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-2 px-8 py-3.5 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 active:scale-[0.97] transition-all"
+                >
+                  Get in Touch <ArrowRight size={16} />
+                </Link>
+                {profile?.resume_url && (
+                  <a
+                    href={profile.resume_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-8 py-3.5 border border-hero-foreground/20 text-hero-foreground font-semibold rounded-lg hover:bg-hero-foreground/5 active:scale-[0.97] transition-all"
+                  >
+                    <Download size={16} /> Resume
+                  </a>
+                )}
+              </div>
             </div>
           </section>
         </RevealSection>

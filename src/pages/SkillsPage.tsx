@@ -2,6 +2,8 @@ import PublicLayout from "@/components/PublicLayout";
 import RevealSection from "@/components/RevealSection";
 import { useSkills, useCertifications } from "@/hooks/usePortfolioData";
 
+const categoryOrder = ["engineering_software", "programming", "hardware_fabrication", "analysis_methods", "laboratory_tools", "soft_skills", "technical", "tools", "soft", "languages", "other"];
+
 export default function SkillsPage() {
   const { data: skills } = useSkills();
   const { data: certifications } = useCertifications();
@@ -13,6 +15,14 @@ export default function SkillsPage() {
     return acc;
   }, {} as Record<string, typeof skills>);
 
+  const sortedCategories = Object.entries(skillsByCategory).sort(([a], [b]) => {
+    const ai = categoryOrder.indexOf(a);
+    const bi = categoryOrder.indexOf(b);
+    return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+  });
+
+  const formatCategory = (cat: string) => cat.replace(/_/g, " ");
+
   return (
     <PublicLayout>
       <section className="pt-32 pb-20">
@@ -23,10 +33,10 @@ export default function SkillsPage() {
           </RevealSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
-            {Object.entries(skillsByCategory).map(([category, items], i) => (
+            {sortedCategories.map(([category, items], i) => (
               <RevealSection key={category} delay={i * 80}>
                 <div className="bg-card rounded-xl p-6 border border-border h-full">
-                  <h3 className="font-semibold capitalize mb-5 text-sm uppercase tracking-wider text-muted-foreground">{category}</h3>
+                  <h3 className="font-semibold capitalize mb-5 text-sm uppercase tracking-wider text-muted-foreground">{formatCategory(category)}</h3>
                   <div className="space-y-3">
                     {(items ?? []).map((skill) => (
                       <div key={skill.id}>
