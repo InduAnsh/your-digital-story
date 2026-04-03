@@ -3,7 +3,7 @@ import RevealSection from "@/components/RevealSection";
 import { useProfile, useSocialLinks, useContactSettings } from "@/hooks/usePortfolioData";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
-import { Mail, Phone, MapPin, ExternalLink, Github, Linkedin, Twitter, Calendar } from "lucide-react";
+import { Mail, Phone, MapPin, ExternalLink, Github, Linkedin, Twitter, Calendar, Download } from "lucide-react";
 import { toast } from "sonner";
 
 const socialIconMap: Record<string, React.ReactNode> = {
@@ -45,11 +45,11 @@ export default function ContactPage() {
         <div className="container max-w-4xl">
           <RevealSection>
             <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-2">Contact</p>
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-balance leading-[1.1]">Get in Touch</h1>
+            <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-balance leading-[1.1]">Get in Touch</h1>
+            <p className="text-muted-foreground mb-8">Available for internship and engineering opportunities.</p>
           </RevealSection>
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mt-10">
-            {/* Info */}
             <RevealSection delay={80} className="md:col-span-2">
               <div className="space-y-6">
                 {settings?.show_email !== false && profile?.email && (
@@ -78,6 +78,17 @@ export default function ContactPage() {
                       <p className="text-sm font-medium">{profile.location}</p>
                     </div>
                   </div>
+                )}
+
+                {profile?.resume_url && (
+                  <a
+                    href={profile.resume_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground font-medium rounded-lg text-sm hover:opacity-90 transition-colors"
+                  >
+                    <Download size={14} /> Download Resume
+                  </a>
                 )}
 
                 {settings?.scheduling_link && (
@@ -113,59 +124,27 @@ export default function ContactPage() {
               </div>
             </RevealSection>
 
-            {/* Form */}
             <RevealSection delay={160} className="md:col-span-3">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Name *</label>
-                    <input
-                      type="text"
-                      required
-                      value={form.name}
-                      onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      className="w-full px-4 py-2.5 text-sm rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
-                      maxLength={100}
-                    />
+                    <input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-4 py-2.5 text-sm rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20" maxLength={100} />
                   </div>
                   <div>
                     <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Email *</label>
-                    <input
-                      type="email"
-                      required
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className="w-full px-4 py-2.5 text-sm rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
-                      maxLength={255}
-                    />
+                    <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-2.5 text-sm rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20" maxLength={255} />
                   </div>
                 </div>
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Subject</label>
-                  <input
-                    type="text"
-                    value={form.subject}
-                    onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                    className="w-full px-4 py-2.5 text-sm rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
-                    maxLength={200}
-                  />
+                  <input type="text" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} className="w-full px-4 py-2.5 text-sm rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20" maxLength={200} />
                 </div>
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Message *</label>
-                  <textarea
-                    required
-                    rows={5}
-                    value={form.message}
-                    onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    className="w-full px-4 py-2.5 text-sm rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
-                    maxLength={2000}
-                  />
+                  <textarea required rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full px-4 py-2.5 text-sm rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none" maxLength={2000} />
                 </div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 active:scale-[0.97] transition-all disabled:opacity-50"
-                >
+                <button type="submit" disabled={loading} className="w-full px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 active:scale-[0.97] transition-all disabled:opacity-50">
                   {loading ? "Sending..." : "Send Message"}
                 </button>
               </form>
