@@ -183,8 +183,8 @@ export function useCoursework() {
   return useQuery({
     queryKey: ["coursework"],
     queryFn: async () => {
-      const { data } = await supabase.from("coursework" as any).select("*").eq("is_visible", true).order("display_order");
-      return (data ?? []) as any[];
+      const { data } = await supabase.from("coursework").select("*").eq("is_visible", true).order("display_order");
+      return data ?? [];
     },
   });
 }
@@ -193,8 +193,8 @@ export function useLeadershipActivities() {
   return useQuery({
     queryKey: ["leadership_activities"],
     queryFn: async () => {
-      const { data } = await supabase.from("leadership_activities" as any).select("*").eq("is_visible", true).order("display_order");
-      return (data ?? []) as any[];
+      const { data } = await supabase.from("leadership_activities").select("*").eq("is_visible", true).order("display_order");
+      return data ?? [];
     },
   });
 }
@@ -203,8 +203,8 @@ export function useAchievements() {
   return useQuery({
     queryKey: ["achievements"],
     queryFn: async () => {
-      const { data } = await supabase.from("achievements" as any).select("*").eq("is_visible", true).order("display_order");
-      return (data ?? []) as any[];
+      const { data } = await supabase.from("achievements").select("*").eq("is_visible", true).order("display_order");
+      return data ?? [];
     },
   });
 }
@@ -213,8 +213,8 @@ export function useTechnicalHighlights() {
   return useQuery({
     queryKey: ["technical_highlights"],
     queryFn: async () => {
-      const { data } = await supabase.from("technical_highlights" as any).select("*").eq("is_visible", true).order("display_order");
-      return (data ?? []) as any[];
+      const { data } = await supabase.from("technical_highlights").select("*").eq("is_visible", true).order("display_order");
+      return data ?? [];
     },
   });
 }
@@ -223,8 +223,8 @@ export function useInterests() {
   return useQuery({
     queryKey: ["interests"],
     queryFn: async () => {
-      const { data } = await supabase.from("interests" as any).select("*").eq("is_visible", true).order("display_order");
-      return (data ?? []) as any[];
+      const { data } = await supabase.from("interests").select("*").eq("is_visible", true).order("display_order");
+      return data ?? [];
     },
   });
 }
