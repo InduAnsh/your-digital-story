@@ -136,3 +136,53 @@
   transform: translateY(0);
   filter: blur(0);
 }
+
+/* Hero gradient text */
+.hero-gradient-text {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--hero-foreground)) 0%,
+    hsl(var(--hero-foreground) / 0.7) 50%,
+    hsl(var(--primary)) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background: hsl(var(--primary) / 0.2);
+  color: hsl(var(--foreground));
+}
+
+/* Card shine effect on hover */
+.card-shine {
+  position: relative;
+  overflow: hidden;
+}
+.card-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    135deg,
+    transparent 40%,
+    hsl(var(--primary) / 0.03) 50%,
+    transparent 60%
+  );
+  transform: rotate(0deg);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+.card-shine:hover::after {
+  transform: rotate(180deg);
+}
